@@ -4,7 +4,7 @@ exports.command = async (args, p, message) => {
 
     const Utils = require(`${p.workingDir}/infrastructure/utils`).Utils;
 
-    logger.log(`${thisCommandName}: Started`);
+    logger.log(`${thisCommandName}: Started. args: ${JSON.stringify(args)}`);
     let str = !message.isEmpty ? `| message: ${message}` : '';
     await Utils.delay(100, logger);
     logger.log(`${thisCommandName}: Ended. args: ${JSON.stringify(args)} ${str}`);
