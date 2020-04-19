@@ -1,26 +1,40 @@
-exports.command = async (args, p, message) => {
-    const thisCommandName = 'cmdGetSample';
-    let logger = p.getLogger();
-
-    const Command = require(`${p.workingDir}/models/command`).Command;
-    const Utils = require(`${p.workingDir}/infrastructure/utils`).Utils;
-
-    let sql = p.getResource('sql');
-    if (!Utils.isValid(sql)) {
-        await p.execute(new Command('cmdSqlConnect'));
-        sql = p.getResource('sql');
-    }
-
-    if (!Utils.isValid(sql))
-        return false;
-
-    let recordset = await sql.simpleQuery(args.select, args.from);
-    p.setResource('recordset', recordset);
-    let str = !message.isEmpty ? `| message: ${message}` : '';
-    logger.log(`${thisCommandName}: args: ${JSON.stringify(args)} ${str}`);
-
-    return true;
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
+    result["default"] = mod;
+    return result;
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+function command(args, p, message) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const thisCommandName = 'cmdGetSample';
+        let logger = p.getLogger();
+        const _ = yield Promise.resolve().then(() => __importStar(require(`${p.stdImportDir}/lodash`)));
+        const Command = (yield Promise.resolve().then(() => __importStar(require(`${p.workingDir}/models/command`)))).Command;
+        let sql = p.getResource('sql');
+        if (_.isNil(sql)) {
+            yield p.execute(new Command('cmdSqlConnect'));
+            sql = p.getResource('sql');
+        }
+        if (_.isNil(sql))
+            return false;
+        let recordset = yield sql.simpleQuery(args.select, args.from);
+        p.setResource('recordset', recordset);
+        let str = !message.isEmpty ? `| message: ${message}` : '';
+        logger.log(`${thisCommandName}: args: ${JSON.stringify(args)} ${str}`);
+        return true;
+    });
 }
-
-
-
+exports.command = command;
+//# sourceMappingURL=cmdGetSample-1.js.map
