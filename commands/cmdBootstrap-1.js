@@ -42,6 +42,7 @@ function command(args, p) {
                 return yield p.publishParallel(p.getQueueNames()[0], new Command('cmdTestP', { order: 1 }), new Command('cmdTestP', { order: 2 }), new Command('cmdTestP', { order: 3 }));
             }), 1370);
         }
+        setInterval(() => __awaiter(this, void 0, void 0, function* () { return yield p.execute(new Command('cmdHttpClientSample')); }), 5000);
         return br;
     });
 }
