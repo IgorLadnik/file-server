@@ -24,10 +24,10 @@ function command(args, p) {
         const Command = (yield Promise.resolve().then(() => __importStar(require(`${p.workingDir}/models/command`)))).Command;
         const HttpServerProvider = (yield Promise.resolve().then(() => __importStar(require(`${p.workingDir}/infrastructure/httpServerProvider`)))).HttpServerProvider;
         const port = args;
-        const httpServer = new HttpServerProvider(port, logger).server;
+        const httpServer = yield new HttpServerProvider(port, logger).start();
         if (!_.isNil(httpServer)) {
-            logger.log(`${thisCommandName}: http server created and is listening on port = ${port}`);
-            return yield p.execute(new Command('cmdRest', httpServer), new Command('cmdRestA', httpServer));
+            yield logger.log(`${thisCommandName}: http server created and is listening on port = ${port}`);
+            return yield p.execute(new Command('cmdRest', httpServer), new Command('cmdRestA', httpServer), new Command('cmdRestPost', httpServer));
         }
         return false;
     });

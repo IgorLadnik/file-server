@@ -51,10 +51,10 @@ function command(args, p) {
                 }
             }
         };
-        httpOpenApiServerProvider.server.post(`${dir}`, (req, res) => {
+        httpOpenApiServerProvider.server.post(`${dir}`, (req, res) => __awaiter(this, void 0, void 0, function* () {
             res.json({ id: 139, name: req.query.name });
-            logger.log(`${thisCommandName}:`);
-        });
+            yield logger.log(`${thisCommandName}:`);
+        }));
         return true;
     });
 }

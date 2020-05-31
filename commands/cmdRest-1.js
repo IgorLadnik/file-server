@@ -37,7 +37,7 @@ function command(args, p) {
                     res.send(`Hello World! ${JSON.stringify(recordset)}`);
                 }
                 catch (err) {
-                    logger.log(err);
+                    yield logger.log(err);
                 }
             }
         }));

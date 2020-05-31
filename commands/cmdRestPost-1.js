@@ -16,21 +16,25 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-function command(args, p, message) {
+function command(args, p) {
     return __awaiter(this, void 0, void 0, function* () {
-        const thisCommandName = 'cmdTemplate';
+        const thisCommandName = 'cmdRestPost';
         let logger = p.getLogger();
-        logger.log(`Command ${thisCommandName} started  args: ${JSON.stringify(args)} ${!message.isEmpty ? `, message: ${message}` : ''}`);
         const _ = yield Promise.resolve().then(() => __importStar(require(`${p.stdImportDir}/lodash`)));
-        const Utils = (yield Promise.resolve().then(() => __importStar(require(`${p.workingDir}/infrastructure/utils`)))).Utils;
-        const Config = (yield Promise.resolve().then(() => __importStar(require(`${p.workingDir}/config`)))).Config;
+        const bodyParser = require('body-parser');
         const Command = (yield Promise.resolve().then(() => __importStar(require(`${p.workingDir}/models/command`)))).Command;
-        const HttpServerProvider = (yield Promise.resolve().then(() => __importStar(require(`${p.workingDir}/infrastructure/httpServerProvider`)))).HttpServerProvider;
-        const HttpOpenApiServerProvider = (yield Promise.resolve().then(() => __importStar(require(`${p.workingDir}/infrastructure/httpOpenApiServerProvider`)))).HttpOpenApiServerProvider;
-        const SqlServerProvider = (yield Promise.resolve().then(() => __importStar(require(`${p.workingDir}/infrastructure/SqlServerProvider`)))).SqlServerProvider;
-        logger.log(`Command ${thisCommandName} ended`);
+        let httpServer = args;
+        if (_.isNil(httpServer)) {
+            yield logger.log(`Error in command \"${thisCommandName}\" http server is not available`);
+            return false;
+        }
+        yield logger.log(`Command \"${thisCommandName}\" http POST on root created`);
+        httpServer.post('/p', (req, res) => {
+            const str = req.body;
+            const queryName = req.query.name;
+        });
         return true;
     });
 }
 exports.command = command;
-//# sourceMappingURL=cmdTemplate-1.js.map
+//# sourceMappingURL=cmdRestPost-1.js.map

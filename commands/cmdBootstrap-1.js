@@ -16,9 +16,8 @@ function command(args, p) {
         logger.log(thisCommandName);
         const Command = require(`${p.workingDir}/models/command`).Command;
         const Config = require(`${p.workingDir}/config`).Config;
-        let br = yield p.execute(new Command('cmdCreateHttpServer', Config.httpServer.ports[0]));
-        if (br)
-            br = yield p.execute(new Command('cmdCreateHttpOpenApiServer', Config.httpServer.ports[1]));
+        let br0 = yield p.execute(new Command('cmdCreateHttpServer', Config.httpServer.ports[0]));
+        let br = yield p.execute(new Command('cmdCreateHttpOpenApiServer', Config.httpServer.ports[1]));
         logger.log('before fork cmdTestP 1001');
         p.executeFork(1000, new Command('cmdTestP', { order: 1001 }), new Command('cmdTestP', { order: 1002 }));
         logger.log('after fork cmdTestP 1001');
@@ -26,11 +25,10 @@ function command(args, p) {
         p.executeForkParallel(1000, new Command('cmdTestP', { order: 2001 }), new Command('cmdTestP', { order: 2002 }));
         logger.log('after fork parallel cmdTestP 2002');
         if (br) {
-            br = false;
             let commandFirstFetch = new Command('cmdFirstFetch', { a: 'aaa', n: 1 });
             if (!(yield p.execute(commandFirstFetch)))
                 if (yield p.execute(new Command('cmdSqlConnect')))
-                    br = yield p.execute(commandFirstFetch);
+                    yield p.execute(commandFirstFetch);
         }
         if (br)
             br = yield p.executeParallel(new Command('cmdTestP', { order: 1 }), new Command('cmdTestP', { order: 2 }), new Command('cmdTestP', { order: 3 }));

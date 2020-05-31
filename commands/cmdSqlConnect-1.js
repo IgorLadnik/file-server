@@ -18,10 +18,16 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 function command(args, p) {
     return __awaiter(this, void 0, void 0, function* () {
+        const thisCommandName = 'cmdSqlConnect';
         let logger = p.getLogger();
         logger.log(`cmdSqlConnect: args: ${JSON.stringify(args)}`);
+        const _ = yield Promise.resolve().then(() => __importStar(require(`${p.stdImportDir}/lodash`)));
         const SqlServerProvider = (yield Promise.resolve().then(() => __importStar(require(`${p.workingDir}/infrastructure/SqlServerProvider`)))).SqlServerProvider;
         const Config = (yield Promise.resolve().then(() => __importStar(require(`${p.workingDir}/config`)))).Config;
+        if (_.isNil(Config.sqlServer)) {
+            yield logger.log(`${thisCommandName}: configuration for SQL Server is not defined`);
+            return true;
+        }
         let server = Config.sqlServer.host;
         let database = Config.sqlServer.databases[0];
         let sql = new SqlServerProvider({ server, database }, logger);
@@ -31,7 +37,7 @@ function command(args, p) {
             return true;
         }
         catch (err) {
-            logger.log(err);
+            yield logger.log(err);
             return false;
         }
     });

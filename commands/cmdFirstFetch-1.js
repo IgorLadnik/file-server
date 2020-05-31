@@ -30,7 +30,7 @@ function command(args, p, message) {
             recordset = yield sql.simpleQuery('*', dbTable);
         }
         catch (err) {
-            logger.log(`Error in command \"${thisCommandName}\": failed to execute query to table \"${dbTable}\"`);
+            yield logger.log(`Error in command \"${thisCommandName}\": failed to execute query to table \"${dbTable}\"`);
             return false;
         }
         p.setResource('recordset', recordset);

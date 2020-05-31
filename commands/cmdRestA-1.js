@@ -24,7 +24,7 @@ function command(args, p) {
         const Command = (yield Promise.resolve().then(() => __importStar(require(`${p.workingDir}/models/command`)))).Command;
         let httpServer = args;
         if (_.isNil(httpServer)) {
-            logger.log(`Error in command \"${thisCommandName}\" http server is not available`);
+            yield logger.log(`Error in command \"${thisCommandName}\" http server is not available`);
             return false;
         }
         logger.log(`Command \"${thisCommandName}\" http GET on root/a created`);
@@ -40,7 +40,7 @@ function command(args, p) {
                         p.deleteResource('res');
                     }
                     catch (err) {
-                        logger.log(err);
+                        yield logger.log(err);
                     }
                 }
             }), 1);
