@@ -29,33 +29,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.command = void 0;
-function command(args, p) {
+function command(args, p, message) {
     return __awaiter(this, void 0, void 0, function* () {
-        const thisCommandName = 'cmdRest';
+        const thisCommandName = 'cmdRabbitMQPublisher';
         let logger = p.getLogger();
+        logger.log(`Command ${thisCommandName} started  args: ${JSON.stringify(args)} ${!message.isEmpty ? `, message: ${message}` : ''}`);
+        const Command = require(`${p.workingDir}/models/command`).Command;
+        const Config = (yield Promise.resolve().then(() => __importStar(require(`${p.workingDir}/config`)))).Config;
         const _ = yield Promise.resolve().then(() => __importStar(require(`${p.stdImportDir}/lodash`)));
-        const Command = (yield Promise.resolve().then(() => __importStar(require(`${p.workingDir}/models/command`)))).Command;
-        let httpServer = args;
-        if (_.isNil(httpServer)) {
-            logger.log(`Error in command \"${thisCommandName}\" http server is not available`);
-            return false;
-        }
-        logger.log(`Command \"${thisCommandName}\" http GET on root created`);
-        httpServer.get('/', (req, res) => __awaiter(this, void 0, void 0, function* () {
-            yield p.execute(new Command('cmdGetSample', { select: '*', from: 'Pets' }));
-            let recordset = p.getResource('recordset');
-            if (recordset) {
-                p.deleteResource('recordset');
-                try {
-                    res.send(`Hello World! ${JSON.stringify(recordset)}`);
-                }
-                catch (err) {
-                    yield logger.log(err);
-                }
-            }
-        }));
+        const Publisher = (yield Promise.resolve().then(() => __importStar(require(`${p.stdImportDir}/rabbitmq-provider/publisher`)))).Publisher;
+        const publisher = yield Publisher.createPublisher(Config.messageBroker, logger);
+        p.setResource('publisher', publisher);
+        setInterval(() => __awaiter(this, void 0, void 0, function* () {
+            return yield publisher.publishAsync(new Command('cmdFirstFetch', { a: 'aaa', n: 1 }), new Command('cmdFirstFetch', { a: 'qqq', n: 1 }));
+        }), 3000);
+        setInterval(() => __awaiter(this, void 0, void 0, function* () {
+            return yield publisher.publishAsync(new Command('cmdTestP', { order: 1 }), new Command('cmdTestP', { order: 2 }), new Command('cmdTestP', { order: 3 }));
+        }), 1370);
+        logger.log(`Command ${thisCommandName} ended`);
         return true;
     });
 }
 exports.command = command;
-//# sourceMappingURL=cmdRest-1.js.map
+//# sourceMappingURL=cmdRabbitMQPublisher-1.js.map

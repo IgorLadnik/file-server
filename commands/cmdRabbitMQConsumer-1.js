@@ -29,33 +29,19 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.command = void 0;
-function command(args, p) {
+function command(args, p, message) {
     return __awaiter(this, void 0, void 0, function* () {
-        const thisCommandName = 'cmdRest';
+        const thisCommandName = 'cmdRabbitMQConsumer';
         let logger = p.getLogger();
+        logger.log(`Command ${thisCommandName} started  args: ${JSON.stringify(args)} ${!message.isEmpty ? `, message: ${message}` : ''}`);
+        const Config = (yield Promise.resolve().then(() => __importStar(require(`${p.workingDir}/config`)))).Config;
         const _ = yield Promise.resolve().then(() => __importStar(require(`${p.stdImportDir}/lodash`)));
-        const Command = (yield Promise.resolve().then(() => __importStar(require(`${p.workingDir}/models/command`)))).Command;
-        let httpServer = args;
-        if (_.isNil(httpServer)) {
-            logger.log(`Error in command \"${thisCommandName}\" http server is not available`);
-            return false;
-        }
-        logger.log(`Command \"${thisCommandName}\" http GET on root created`);
-        httpServer.get('/', (req, res) => __awaiter(this, void 0, void 0, function* () {
-            yield p.execute(new Command('cmdGetSample', { select: '*', from: 'Pets' }));
-            let recordset = p.getResource('recordset');
-            if (recordset) {
-                p.deleteResource('recordset');
-                try {
-                    res.send(`Hello World! ${JSON.stringify(recordset)}`);
-                }
-                catch (err) {
-                    yield logger.log(err);
-                }
-            }
-        }));
+        const Consumer = (yield Promise.resolve().then(() => __importStar(require(`${p.stdImportDir}/rabbitmq-provider/consumer`)))).Consumer;
+        const consumer = yield Consumer.createConsumer(Config.messageBroker, logger, (thisConsumer, msg) => p.getCommandFromQueueMessageAndExecute(msg));
+        p.setResource('consumer', consumer);
+        logger.log(`Command ${thisCommandName} ended`);
         return true;
     });
 }
 exports.command = command;
-//# sourceMappingURL=cmdRest-1.js.map
+//# sourceMappingURL=cmdRabbitMQConsumer-1.js.map

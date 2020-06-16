@@ -29,33 +29,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.command = void 0;
-function command(args, p) {
+function command(args, p, message) {
     return __awaiter(this, void 0, void 0, function* () {
-        const thisCommandName = 'cmdRest';
+        const thisCommandName = 'cmdTemplate';
         let logger = p.getLogger();
+        logger.log(`Command ${thisCommandName} started  args: ${JSON.stringify(args)} ${!message.isEmpty ? `, message: ${message}` : ''}`);
         const _ = yield Promise.resolve().then(() => __importStar(require(`${p.stdImportDir}/lodash`)));
+        const Utils = (yield Promise.resolve().then(() => __importStar(require(`${p.workingDir}/infrastructure/utils`)))).Utils;
+        const Config = (yield Promise.resolve().then(() => __importStar(require(`${p.workingDir}/config`)))).Config;
         const Command = (yield Promise.resolve().then(() => __importStar(require(`${p.workingDir}/models/command`)))).Command;
-        let httpServer = args;
-        if (_.isNil(httpServer)) {
-            logger.log(`Error in command \"${thisCommandName}\" http server is not available`);
-            return false;
-        }
-        logger.log(`Command \"${thisCommandName}\" http GET on root created`);
-        httpServer.get('/', (req, res) => __awaiter(this, void 0, void 0, function* () {
-            yield p.execute(new Command('cmdGetSample', { select: '*', from: 'Pets' }));
-            let recordset = p.getResource('recordset');
-            if (recordset) {
-                p.deleteResource('recordset');
-                try {
-                    res.send(`Hello World! ${JSON.stringify(recordset)}`);
-                }
-                catch (err) {
-                    yield logger.log(err);
-                }
-            }
-        }));
+        const HttpServerProvider = (yield Promise.resolve().then(() => __importStar(require(`${p.workingDir}/infrastructure/httpServerProvider`)))).HttpServerProvider;
+        const HttpOpenApiServerProvider = (yield Promise.resolve().then(() => __importStar(require(`${p.workingDir}/infrastructure/httpOpenApiServerProvider`)))).HttpOpenApiServerProvider;
+        const SqlServerProvider = (yield Promise.resolve().then(() => __importStar(require(`${p.workingDir}/infrastructure/SqlServerProvider`)))).SqlServerProvider;
+        logger.log(`Command ${thisCommandName} ended`);
         return true;
     });
 }
 exports.command = command;
-//# sourceMappingURL=cmdRest-1.js.map
+//# sourceMappingURL=cmdTemplate-1.js.map
