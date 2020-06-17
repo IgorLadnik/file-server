@@ -31,7 +31,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.command = void 0;
 function command(args, p, message) {
     return __awaiter(this, void 0, void 0, function* () {
-        const thisCommandName = 'cmdRabbitMQConsumer';
+        const thisCommandName = 'cmdRabbitMQCommandConsumer';
         let logger = p.getLogger();
         logger.log(`Command ${thisCommandName} started  args: ${JSON.stringify(args)} ${!message.isEmpty ? `, message: ${message}` : ''}`);
         const Config = (yield Promise.resolve().then(() => __importStar(require(`${p.workingDir}/config`)))).Config;
@@ -44,4 +44,4 @@ function command(args, p, message) {
     });
 }
 exports.command = command;
-//# sourceMappingURL=cmdRabbitMQConsumer-1.js.map
+//# sourceMappingURL=cmdRabbitMQCommandConsumer-1.js.map

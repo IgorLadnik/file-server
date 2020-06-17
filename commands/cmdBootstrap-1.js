@@ -37,7 +37,6 @@ function command(args, p) {
         const Command = require(`${p.workingDir}/models/command`).Command;
         const Config = require(`${p.workingDir}/config`).Config;
         const _ = yield Promise.resolve().then(() => __importStar(require(`${p.stdImportDir}/lodash`)));
-        const Publisher = (yield Promise.resolve().then(() => __importStar(require(`${p.stdImportDir}/rabbitmq-provider/publisher`)))).Publisher;
         let br0 = yield p.execute(new Command('cmdCreateHttpServer', Config.httpServer.ports[0]));
         let br = yield p.execute(new Command('cmdCreateHttpOpenApiServer', Config.httpServer.ports[1]));
         logger.log('before fork cmdTestP 1001');
@@ -57,8 +56,8 @@ function command(args, p) {
         if (br)
             br = yield p.execute(new Command('cmdTestP', { order: 1 }), new Command('cmdTestP', { order: 2 }), new Command('cmdTestP', { order: 3 }));
         if (br && !_.isNil(Config.messageBroker))
-            if (br = yield p.execute(new Command('cmdRabbitMQConsumer')))
-                br = yield p.execute(new Command('cmdRabbitMQPublisher'));
+            if (br = yield p.execute(new Command('cmdRabbitMQCommandConsumer')))
+                br = yield p.execute(new Command('cmdRabbitMQCommandPublisher'));
         setInterval(() => __awaiter(this, void 0, void 0, function* () { return yield p.execute(new Command('cmdHttpClientSample')); }), 5000);
         return br;
     });

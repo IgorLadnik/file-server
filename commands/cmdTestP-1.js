@@ -35,7 +35,7 @@ function command(args, p, message) {
         let logger = p.getLogger();
         const Utils = (yield Promise.resolve().then(() => __importStar(require(`${p.workingDir}/infrastructure/utils`)))).Utils;
         logger.log(`${thisCommandName}: Started. args: ${JSON.stringify(args)}`);
-        let str = !message.isEmpty ? `| message: ${message}` : '';
+        let str = !message.isEmpty ? `| message: ${JSON.stringify(args)}` : '';
         yield Utils.delay(100, logger);
         logger.log(`${thisCommandName}: Ended. args: ${JSON.stringify(args)} ${str}`);
         return true;

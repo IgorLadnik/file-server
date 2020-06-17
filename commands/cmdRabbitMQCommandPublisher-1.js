@@ -31,7 +31,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.command = void 0;
 function command(args, p, message) {
     return __awaiter(this, void 0, void 0, function* () {
-        const thisCommandName = 'cmdRabbitMQPublisher';
+        const thisCommandName = 'cmdRabbitMQCommandPublisher';
         let logger = p.getLogger();
         logger.log(`Command ${thisCommandName} started  args: ${JSON.stringify(args)} ${!message.isEmpty ? `, message: ${message}` : ''}`);
         const Command = require(`${p.workingDir}/models/command`).Command;
@@ -51,4 +51,4 @@ function command(args, p, message) {
     });
 }
 exports.command = command;
-//# sourceMappingURL=cmdRabbitMQPublisher-1.js.map
+//# sourceMappingURL=cmdRabbitMQCommandPublisher-1.js.map

@@ -47,7 +47,7 @@ function command(args, p, message) {
             return false;
         }
         p.setResource('recordset', recordset);
-        let str = !message.isEmpty ? `| message: ${message}` : '';
+        let str = !message.isEmpty ? `| message: ${JSON.stringify(args)}` : '';
         logger.log(`${thisCommandName}: args: ${JSON.stringify(args)} ${str}`);
         return true;
     });

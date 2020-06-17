@@ -34,8 +34,6 @@ function command(args, p) {
         const thisCommandName = 'cmdRestPost';
         let logger = p.getLogger();
         const _ = yield Promise.resolve().then(() => __importStar(require(`${p.stdImportDir}/lodash`)));
-        const bodyParser = require('body-parser');
-        const Command = (yield Promise.resolve().then(() => __importStar(require(`${p.workingDir}/models/command`)))).Command;
         let httpServer = args;
         if (_.isNil(httpServer)) {
             yield logger.log(`Error in command \"${thisCommandName}\" http server is not available`);
