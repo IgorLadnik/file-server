@@ -41,10 +41,10 @@ function command(args, p, message) {
         const publisher = yield Publisher.createPublisher(Config.messageBroker, logger);
         p.setResource('publisher', publisher);
         setInterval(() => __awaiter(this, void 0, void 0, function* () {
-            return yield publisher.publishAsync(new Command('cmdFirstFetch', { a: 'aaa', n: 1 }), new Command('cmdFirstFetch', { a: 'qqq', n: 1 }));
+            return yield publisher.publishAsync(new Command('cmdFirstFetch', { a: 'aaa', n: 11 }), new Command('cmdFirstFetch', { a: 'qqq', n: 11 }));
         }), 3000);
         setInterval(() => __awaiter(this, void 0, void 0, function* () {
-            return yield publisher.publishAsync(new Command('cmdTestP', { order: 1 }), new Command('cmdTestP', { order: 2 }), new Command('cmdTestP', { order: 3 }));
+            return yield publisher.publishAsync(new Command('cmdTestP', { order: 11 }), new Command('cmdTestP', { order: 22 }), new Command('cmdTestP', { order: 33 }));
         }), 1370);
         logger.log(`Command ${thisCommandName} ended`);
         return true;
