@@ -58,9 +58,9 @@ input RelationQueryArg {
 input RelationInput {
   id: String!
   kind: String!
-  p1Id: String!
   p2Id: String!
   since: Int
+  notes: String
 }
 
 input PersonInput {

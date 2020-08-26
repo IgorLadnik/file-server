@@ -17,11 +17,15 @@ const typePaths = [];
 const path = '';
 __dirname = '';
 process.chdir(__dirname);
+const utils_1 = require("./common/utils");
 const common_1 = require("../node_modules/@nestjs/common");
+const typeorm_1 = require("../node_modules/@nestjs/typeorm");
 const graphql_1 = require("../node_modules/@nestjs/graphql");
 const base_resolver_1 = require("./graphQL/resolvers/base.resolver");
 const sql_person_service_1 = require("./services/sql/sql-person.service");
 const neo_person_service_1 = require("./services/neo/neo-person.service");
+const person_entity_1 = require("./entities/person.entity");
+process.chdir(utils_1.goOneDirUp(__dirname));
 let PersonResolver = class PersonResolver extends base_resolver_1.BaseResolver {
     constructor(sqlService, neoService) {
         super(sqlService, neoService);
@@ -45,7 +49,7 @@ let PersonResolver = class PersonResolver extends base_resolver_1.BaseResolver {
         return await this.service.affiliations(parent);
     }
     async relations(parent) {
-        return [];
+        return await this.service.relations(parent);
     }
 };
 __decorate([
@@ -168,7 +172,7 @@ let RelationResolver = class RelationResolver extends base_resolver_1.BaseResolv
         return [];
     }
     async p2(parent) {
-        return [];
+        return await this.service.personById(parent);
     }
 };
 __decorate([
@@ -200,7 +204,9 @@ GqlModule = __decorate([
                 playground: true,
                 typePaths,
                 path,
-            })
+            }),
+            typeorm_1.TypeOrmModule.forRoot(),
+            typeorm_1.TypeOrmModule.forFeature([person_entity_1.Person])
         ],
         providers: [PersonResolver, OrganizationResolver, AffiliationResolver, RelationResolver, sql_person_service_1.SqlPersonService, neo_person_service_1.NeoPersonService]
     })
