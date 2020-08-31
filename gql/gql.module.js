@@ -22,9 +22,8 @@ const common_1 = require("../node_modules/@nestjs/common");
 const typeorm_1 = require("../node_modules/@nestjs/typeorm");
 const graphql_1 = require("../node_modules/@nestjs/graphql");
 const base_resolver_1 = require("./graphQL/resolvers/base.resolver");
-const sql_person_service_1 = require("./services/sql/sql-person.service");
-const neo_person_service_1 = require("./services/neo/neo-person.service");
-const person_entity_1 = require("./entities/person.entity");
+const sql_service_1 = require("./services/sql/sql.service");
+const neo_service_1 = require("./services/neo/neo.service");
 process.chdir(utils_1.goOneDirUp(__dirname));
 let PersonResolver = class PersonResolver extends base_resolver_1.BaseResolver {
     constructor(sqlService, neoService) {
@@ -45,7 +44,8 @@ let PersonResolver = class PersonResolver extends base_resolver_1.BaseResolver {
     async createPersons(personsInput) {
         return this.modifyDb(personsInput, this.sqlService.createPersons, this.neoService.createPersons);
     }
-    async affiliations(parent) {
+    async affiliations(parent, organization, role) {
+        this.testFunc(parent, organization, role);
         return await this.service.affiliations(parent);
     }
     async relations(parent) {
@@ -89,8 +89,10 @@ __decorate([
 __decorate([
     graphql_1.ResolveField('affiliations'),
     __param(0, graphql_1.Parent()),
+    __param(1, graphql_1.Args('organization')),
+    __param(2, graphql_1.Args('role')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [Object, Object, Object]),
     __metadata("design:returntype", Promise)
 ], PersonResolver.prototype, "affiliations", null);
 __decorate([
@@ -102,7 +104,7 @@ __decorate([
 ], PersonResolver.prototype, "relations", null);
 PersonResolver = __decorate([
     graphql_1.Resolver('Person'),
-    __metadata("design:paramtypes", [sql_person_service_1.SqlPersonService, neo_person_service_1.NeoPersonService])
+    __metadata("design:paramtypes", [sql_service_1.SqlService, neo_service_1.NeoService])
 ], PersonResolver);
 exports.PersonResolver = PersonResolver;
 let OrganizationResolver = class OrganizationResolver extends base_resolver_1.BaseResolver {
@@ -131,7 +133,7 @@ __decorate([
 ], OrganizationResolver.prototype, "parent", null);
 OrganizationResolver = __decorate([
     graphql_1.Resolver('Organization'),
-    __metadata("design:paramtypes", [sql_person_service_1.SqlPersonService, neo_person_service_1.NeoPersonService])
+    __metadata("design:paramtypes", [sql_service_1.SqlService, neo_service_1.NeoService])
 ], OrganizationResolver);
 exports.OrganizationResolver = OrganizationResolver;
 let AffiliationResolver = class AffiliationResolver extends base_resolver_1.BaseResolver {
@@ -161,7 +163,7 @@ __decorate([
 ], AffiliationResolver.prototype, "role", null);
 AffiliationResolver = __decorate([
     graphql_1.Resolver('Affiliation'),
-    __metadata("design:paramtypes", [sql_person_service_1.SqlPersonService, neo_person_service_1.NeoPersonService])
+    __metadata("design:paramtypes", [sql_service_1.SqlService, neo_service_1.NeoService])
 ], AffiliationResolver);
 exports.AffiliationResolver = AffiliationResolver;
 let RelationResolver = class RelationResolver extends base_resolver_1.BaseResolver {
@@ -191,7 +193,7 @@ __decorate([
 ], RelationResolver.prototype, "p2", null);
 RelationResolver = __decorate([
     graphql_1.Resolver('Relation'),
-    __metadata("design:paramtypes", [sql_person_service_1.SqlPersonService, neo_person_service_1.NeoPersonService])
+    __metadata("design:paramtypes", [sql_service_1.SqlService, neo_service_1.NeoService])
 ], RelationResolver);
 exports.RelationResolver = RelationResolver;
 let GqlModule = class GqlModule {
@@ -206,9 +208,15 @@ GqlModule = __decorate([
                 path,
             }),
             typeorm_1.TypeOrmModule.forRoot(),
-            typeorm_1.TypeOrmModule.forFeature([person_entity_1.Person])
         ],
-        providers: [PersonResolver, OrganizationResolver, AffiliationResolver, RelationResolver, sql_person_service_1.SqlPersonService, neo_person_service_1.NeoPersonService]
+        providers: [
+            PersonResolver,
+            OrganizationResolver,
+            AffiliationResolver,
+            RelationResolver,
+            sql_service_1.SqlService,
+            neo_service_1.NeoService
+        ]
     })
 ], GqlModule);
 function getModule() { return GqlModule; }
