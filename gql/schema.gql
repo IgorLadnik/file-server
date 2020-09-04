@@ -6,8 +6,8 @@ type Person {
   phone: String
   email: String
   address: String
-  affiliations(organization: String = "IIT Kanpur", role: String = "Student"): [Affiliation]
-  relations: [Relation]
+  affiliations(organization: String, role: String, since: IntInput): [Affiliation]
+  relations(kind: String): [Relation]
 }
 
 type Affiliation {
@@ -47,6 +47,10 @@ type Query {
   allOrganizations: [Organization!]!
 }
 
+type Mutation {
+  createPersons(personsInput: [PersonInput]!): String
+}
+
 input RelationQueryArg {
   id: String
   kind: String
@@ -76,12 +80,21 @@ input PersonInput {
 }
 
 input AffiliationInput {
-    id: String!
-    organizationId: String!
-    roleId: String
-    since: Int
+  id: String!
+  organizationId: String!
+  roleId: String
+  since: Int
 }
 
-type Mutation {
-    createPersons(personsInput: [PersonInput]!): String
+input IntInput {
+  _eq: Int
+  _ne: Int
+  _range: IntRange
+}
+
+input IntRange {
+  _gt: Int
+  _ge: Int
+  _lt: Int
+  _le: Int
 }

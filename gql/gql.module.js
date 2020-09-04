@@ -44,11 +44,12 @@ let PersonResolver = class PersonResolver extends base_resolver_1.BaseResolver {
     async createPersons(personsInput) {
         return this.modifyDb(personsInput, this.sqlService.createPersons, this.neoService.createPersons);
     }
-    async affiliations(parent, organization, role) {
-        this.testFunc(parent, organization, role);
+    async affiliations(parent, organization, role, since) {
+        this.testPrint('affiliations, parent, organization, role, since ->', parent, organization, role, since);
         return await this.service.affiliations(parent);
     }
-    async relations(parent) {
+    async relations(parent, kind) {
+        this.testPrint('relations, parent, kind ->', parent, kind);
         return await this.service.relations(parent);
     }
 };
@@ -91,15 +92,17 @@ __decorate([
     __param(0, graphql_1.Parent()),
     __param(1, graphql_1.Args('organization')),
     __param(2, graphql_1.Args('role')),
+    __param(3, graphql_1.Args('since')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object, Object]),
+    __metadata("design:paramtypes", [Object, Object, Object, Object]),
     __metadata("design:returntype", Promise)
 ], PersonResolver.prototype, "affiliations", null);
 __decorate([
     graphql_1.ResolveField('relations'),
     __param(0, graphql_1.Parent()),
+    __param(1, graphql_1.Args('kind')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], PersonResolver.prototype, "relations", null);
 PersonResolver = __decorate([
